@@ -1,0 +1,27 @@
+[package]
+name = "erobeam"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.anyhow]
+version = "1.0.68"
+features = ["backtrace"]
+
+[dependencies.tokio]
+version = "1"
+features = ["full"]
+
+[dependencies.reqwest]
+version = "0.11.4"
+
+[dependencies.toml]
+version = "0.6.0"
+
+[dependencies.serde]
+features = ["derive"]
+
+[dependencies.scraper]
+version = "0.14.0"
+
+[dependencies.once_cell]
+version = "1.17.0"
