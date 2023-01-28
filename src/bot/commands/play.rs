@@ -1,10 +1,9 @@
 use std::{fs::File, path::Path};
 
-use tokio::io::{BufWriter, AsyncWriteExt};
-
-use crate::chobit;
+use tokio::io::{AsyncWriteExt, BufWriter};
 
 use super::prelude::*;
+use crate::chobit;
 
 async fn handle_play(ctx: &Context, msg: &Message, mut args: Args) -> Result<()> {
     let Ok(url) = args.single::<String>() else {
@@ -31,7 +30,10 @@ async fn handle_play(ctx: &Context, msg: &Message, mut args: Args) -> Result<()>
         .into_anyhow_result("name")?;
     log::debug!("{filename:?}");
     if !filename.exists() {
-        let bytes = reqwest::get(sample.media_url.clone()).await?.bytes().await?;
+        let bytes = reqwest::get(sample.media_url.clone())
+            .await?
+            .bytes()
+            .await?;
         let file = File::create(&filename)?;
         let mut writer = BufWriter::new(tokio::fs::File::from_std(file));
         writer.write_all(&bytes).await?;
