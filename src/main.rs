@@ -17,7 +17,20 @@ async fn main() -> Result<()> {
     env_logger::init();
 
     let mut bot = ErobeamBot::new(config).await?;
-    bot.run().await?;
+
+    tokio::select! {
+        r = bot.run() => {
+            if let Err(e) = r {
+                log::error!("{e}");
+            }
+        },
+        r = tokio::signal::ctrl_c() => {
+            if let Err(e) = r {
+                log::error!("{e}");
+            }
+            println!("shutdown");
+        }
+    }
 
     Ok(())
 }

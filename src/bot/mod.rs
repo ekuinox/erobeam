@@ -1,6 +1,8 @@
 mod commands;
 mod handler;
 
+use std::sync::Arc;
+
 use anyhow::Result;
 use serenity::{framework::standard::StandardFramework, prelude::*};
 use songbird::SerenityInit;
@@ -8,14 +10,20 @@ use songbird::SerenityInit;
 use self::{commands::*, handler::Handler};
 use crate::config::ErobeamConfig;
 
+pub struct Config;
+
+impl TypeMapKey for Config {
+    type Value = Arc<ErobeamConfig>;
+}
+
 pub struct ErobeamBot {
-    #[allow(unused)]
-    config: ErobeamConfig,
     client: Client,
 }
 
 impl ErobeamBot {
     pub async fn new(config: ErobeamConfig) -> Result<ErobeamBot> {
+        tokio::fs::create_dir_all(&config.voice.cache_dir).await?;
+
         let framework = StandardFramework::new()
             .configure(|c| c.prefix(">>"))
             .group(&GENERAL_GROUP);
@@ -25,7 +33,12 @@ impl ErobeamBot {
             .event_handler(Handler)
             .register_songbird()
             .await?;
-        Ok(ErobeamBot { config, client })
+        {
+            let mut data = client.data.write().await;
+            data.insert::<Config>(Arc::new(config));
+        }
+
+        Ok(ErobeamBot { client })
     }
 
     pub async fn run(&mut self) -> Result<()> {

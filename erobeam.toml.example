@@ -1,2 +1,5 @@
 [bot]
 token = ""
+
+[voice]
+cache-dir = "/tmp/erobeam"

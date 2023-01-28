@@ -4,10 +4,10 @@ mod ping;
 mod play;
 
 pub(self) mod prelude {
-    pub use crate::anyhow_ext::IntoAnyhowResult;
+    pub use crate::{anyhow_ext::IntoAnyhowResult, bot::Config};
     pub use anyhow::Result;
     pub use serenity::{
-        framework::standard::{macros::command, CommandResult, Args},
+        framework::standard::{macros::command, Args, CommandResult},
         model::prelude::*,
         prelude::*,
     };
