@@ -2,6 +2,7 @@ mod join;
 mod leave;
 mod ping;
 mod play;
+mod stop;
 
 pub(self) mod prelude {
     pub use crate::{anyhow_ext::IntoAnyhowResult, bot::Config};
@@ -15,8 +16,8 @@ pub(self) mod prelude {
 
 use serenity::framework::standard::macros::group;
 
-use self::{join::*, leave::*, ping::*, play::*};
+use self::{join::*, leave::*, ping::*, play::*, stop::*};
 
 #[group]
-#[commands(join, leave, ping, play)]
+#[commands(join, leave, ping, play, stop)]
 pub struct General;
