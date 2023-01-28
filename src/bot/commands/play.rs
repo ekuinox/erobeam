@@ -47,7 +47,7 @@ async fn handle_play(ctx: &Context, msg: &Message, mut args: Args) -> Result<()>
 
     let source = songbird::ffmpeg(&filename).await?;
     let mut handler = handler.lock().await;
-    handler.play_source(source);
+    handler.play_only_source(source);
 
     Ok(())
 }
