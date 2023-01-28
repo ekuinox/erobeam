@@ -61,18 +61,18 @@ impl VoiceProduct {
         })
     }
 
-    fn from_document(doc: Html) -> Result<VoiceProduct> {
+    pub fn from_document(doc: Html) -> Result<VoiceProduct> {
         static PLAYER_BOX_SELECTOR: Lazy<Selector> =
             Lazy::new(|| Selector::parse("div.player-box").unwrap());
 
         let mut playerbox = doc.select(&PLAYER_BOX_SELECTOR);
-        let Some(elm) = playerbox.nth(0) else {
+        let Some(elm) = playerbox.next() else {
             bail!("player-box not found")
         };
         VoiceProduct::from_playerbox_div(elm)
     }
 
-    async fn from_url<T: IntoUrl>(url: T) -> Result<VoiceProduct> {
+    pub async fn from_url<T: IntoUrl>(url: T) -> Result<VoiceProduct> {
         let text = reqwest::get(url).await?.text().await?;
         let doc = Html::parse_document(&text);
         VoiceProduct::from_document(doc)
