@@ -14,6 +14,8 @@ async fn main() -> Result<()> {
         std::env::var("EROBEAM_CONFIG_PATH").unwrap_or_else(|_| "/etc/erobeam.toml".to_string());
     let config = ErobeamConfig::open(path)?;
 
+    env_logger::init();
+
     let mut bot = ErobeamBot::new(config).await?;
     bot.run().await?;
 

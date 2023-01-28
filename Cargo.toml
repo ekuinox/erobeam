@@ -32,3 +32,9 @@ features = ["client", "standard_framework", "voice", "rustls_backend"]
 
 [dependencies.songbird]
 version = "0.3.0"
+
+[dependencies.log]
+version = "0.4.17"
+
+[dependencies.env_logger]
+version = "0.10.0"

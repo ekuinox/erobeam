@@ -1,11 +1,4 @@
-use anyhow::Result;
-use serenity::{
-    framework::standard::{macros::command, CommandResult},
-    model::prelude::*,
-    prelude::*,
-};
-
-use crate::anyhow_ext::IntoAnyhowResult;
+use super::prelude::*;
 
 async fn handle_join(ctx: &Context, msg: &Message) -> Result<()> {
     let guild = msg.guild(&ctx.cache).into_anyhow_result("guild")?;
@@ -26,7 +19,7 @@ async fn handle_join(ctx: &Context, msg: &Message) -> Result<()> {
 #[only_in(guilds)]
 pub async fn join(ctx: &Context, msg: &Message) -> CommandResult {
     if let Err(e) = handle_join(ctx, msg).await {
-        eprintln!("{e}");
+        log::error!("{e}");
     }
 
     Ok(())
