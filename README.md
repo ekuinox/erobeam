@@ -1,5 +1,7 @@
 # erobeam
 
+[chobit.cc](https://chobit.cc/)の音声作品サンプルをVCに垂れ流すDiscord Bot
+
 ## ビルド
 
 ```console
@@ -49,3 +51,9 @@ PERMISSIONは`2184251392`とかで良いと思います。（最低限チャッ�
 - ping ... pong!を返します
 - help ... ヘルプが出ますが特に情報がないです
 - seek ... 秒数を指定してシークしますが今のところ機能しません
+
+## 対応しているサービス
+
+- [x] [chobit.cc](https://chobit.cc)
+- [ ] [FANZA](https://www.dmm.co.jp)
+- [ ] [DLsite](https://www.dlsite.com)
