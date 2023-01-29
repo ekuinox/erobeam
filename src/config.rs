@@ -6,6 +6,8 @@ use serde::Deserialize;
 #[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct BotCredentialConfig {
     pub token: String,
+    #[serde(default = "default_command_prefix")]
+    pub prefix: String,
 }
 
 #[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
@@ -28,4 +30,8 @@ impl ErobeamConfig {
         let config = toml::from_str(&buf)?;
         Ok(config)
     }
+}
+
+fn default_command_prefix() -> String {
+    ">>".to_string()
 }

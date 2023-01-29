@@ -25,7 +25,7 @@ impl ErobeamBot {
         tokio::fs::create_dir_all(&config.voice.cache_dir).await?;
 
         let framework = StandardFramework::new()
-            .configure(|c| c.prefix(">>"))
+            .configure(|c| c.prefix(&config.bot.prefix))
             .group(&GENERAL_GROUP);
         let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
         let client = Client::builder(config.bot.token.clone(), intents)
