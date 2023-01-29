@@ -2,6 +2,9 @@
 name = "erobeam"
 version = "0.1.0"
 edition = "2021"
+authors = ["ekuinox <depkey@me.com>"]
+repository = "https://github.com/ekuinox/erobeam"
+rust-version = "1.66.1"
 
 [dependencies.anyhow]
 version = "1.0.68"
