@@ -4,5 +4,5 @@
 
 ```console
 $ sudo apt update -y
-$ sudo apt install libopus-dev`
+$ sudo apt install libopus-dev
 ```
