@@ -472,6 +472,7 @@ dependencies = [
  "songbird",
  "tokio",
  "toml",
+ "uuid",
 ]
 
 [[package]]

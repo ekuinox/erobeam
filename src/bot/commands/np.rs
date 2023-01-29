@@ -8,11 +8,14 @@ async fn handle_np(ctx: &Context, msg: &Message) -> Result<()> {
     let handler = handler.lock().await;
     let text = match handler.queue().current() {
         Some(current) => {
-            let track = if let Some(track) = &current.metadata().track {
-                track.clone()
+            let data = ctx.data.read().await;
+            let track = if let Some(data) = data.get::<TrackDetailsKey>() {
+                let track = data.get(&current.uuid()).await?;
+                track.title.clone()
             } else {
-                "UNKNOWN".to_string()
+                String::new()
             };
+
             let duration = if let Some(duration) = &current.metadata().duration {
                 let m = duration.as_secs() / 60;
                 let s = duration.as_secs() % 60;

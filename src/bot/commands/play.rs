@@ -5,7 +5,7 @@ use std::{
 };
 
 use reqwest::Url;
-use songbird::Call;
+use songbird::{tracks::TrackHandle, Call};
 use tokio::io::{AsyncWriteExt, BufWriter};
 
 use super::prelude::*;
@@ -30,7 +30,27 @@ async fn handle_play(ctx: &Context, msg: &Message, mut args: Args) -> Result<()>
             .clone()
     };
 
-    play_chobit_product(&cache_dir, url, handler).await?;
+    let product = play_chobit_product(&cache_dir, url, handler).await?;
+    {
+        let data = ctx.data.write().await;
+        if let Some(tracks) = data.get::<TrackDetailsKey>() {
+            for track in product.voice_sample_tracks {
+                if let Err(e) = tracks
+                    .insert(
+                        track.handle.uuid(),
+                        TrackDetail {
+                            url: track.media_url,
+                            author: product.circle_name.clone(),
+                            title: format!("{} - {}", product.title, track.title),
+                        },
+                    )
+                    .await
+                {
+                    log::error!("{e}");
+                }
+            }
+        }
+    }
 
     Ok(())
 }
@@ -79,6 +99,7 @@ async fn play_chobit_voice(
         title,
         playtime,
         path: filename,
+        handle: track,
     })
 }
 
@@ -113,15 +134,16 @@ async fn play_chobit_product(
     })
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct VoiceSampleTrack {
     pub media_url: Url,
     pub title: String,
     pub playtime: String, // Todo to Duration
     pub path: PathBuf,
+    pub handle: TrackHandle,
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct VoiceProduct {
     pub product_id: String,
     pub title: String,

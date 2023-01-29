@@ -11,7 +11,7 @@ mod skip;
 mod stop;
 
 pub(self) mod prelude {
-    pub use crate::{anyhow_ext::IntoAnyhowResult, bot::Config};
+    pub use crate::{anyhow_ext::IntoAnyhowResult, bot::{Config, TrackDetailsKey, TrackDetail, TrackDetails}};
     pub use anyhow::Result;
     pub use serenity::{
         framework::standard::{macros::command, Args, CommandResult},

@@ -1,3 +1,7 @@
+use std::sync::Arc;
+
+use uuid::Uuid;
+
 use super::prelude::*;
 
 async fn handle_queue(ctx: &Context, msg: &Message) -> Result<()> {
@@ -9,14 +13,35 @@ async fn handle_queue(ctx: &Context, msg: &Message) -> Result<()> {
         let handler = handler.lock().await;
         handler.queue().to_owned()
     };
-    let tracks = queue.current_queue().into_iter().enumerate().map(|(i, current)| {
-        let n = i + 1;
-        if let Some(track) = &current.metadata().track {
-            format!("{n} - {track} {{uuid={}}}", current.uuid())
-        } else {
-            format!("{n} - UNKNOWN")
+    let tracks = {
+        async fn get(ctx: Context, uuid: Uuid) -> Result<Arc<TrackDetail>> {
+            let details = ctx.data.read().await;
+            let details = details
+                .get::<TrackDetailsKey>()
+                .into_anyhow_result("details")?;
+            details.get(&uuid).await
         }
-    }).collect::<Vec<_>>().join("\n");
+
+        let tracks = futures::future::join_all(
+            queue
+                .current_queue()
+                .into_iter()
+                .map(|track| get(ctx.clone(), track.uuid())),
+        )
+        .await;
+        tracks
+    };
+    let tracks = tracks
+        .into_iter()
+        .enumerate()
+        .map(|(i, track)| {
+            if let Ok(track) = track {
+                format!("{i} - {}\n", track.title)
+            } else {
+                format!("{i} - UNKNOWN\n")
+            }
+        })
+        .collect::<String>();
     let text = if tracks.is_empty() {
         "キューには何もありません".to_string()
     } else {
