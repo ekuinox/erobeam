@@ -20,7 +20,7 @@ async fn handle_np(ctx: &Context, msg: &Message) -> Result<()> {
             } else {
                 String::new()
             };
-            format!("再生中 - {track} {duration}")
+            format!("再生中 - {track} {duration} {{uuid={}}}", current.uuid())
         }
         None => "何も再生していないっぽいです".to_string(),
     };

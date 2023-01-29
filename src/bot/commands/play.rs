@@ -59,8 +59,10 @@ async fn play_chobit_voice(
         .last()
         .into_anyhow_result("name")?;
     let filename = cache_dir.join(filename);
-    log::debug!("{filename:?}");
-    if !filename.exists() {
+    if filename.exists() {
+        log::info!("Cache exists ... {filename:?}");
+    } else {
+        log::info!("Download ... {filename:?}");
         let bytes = reqwest::get(media_url.clone()).await?.bytes().await?;
         let file = File::create(&filename)?;
         let mut writer = BufWriter::new(tokio::fs::File::from_std(file));

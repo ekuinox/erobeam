@@ -9,10 +9,10 @@ async fn handle_queue(ctx: &Context, msg: &Message) -> Result<()> {
         let handler = handler.lock().await;
         handler.queue().to_owned()
     };
-    let tracks = queue.current_queue().into_iter().enumerate().map(|(i, track)| {
+    let tracks = queue.current_queue().into_iter().enumerate().map(|(i, current)| {
         let n = i + 1;
-        if let Some(track) = &track.metadata().track {
-            format!("{n} - {track}")
+        if let Some(track) = &current.metadata().track {
+            format!("{n} - {track} {{uuid={}}}", current.uuid())
         } else {
             format!("{n} - UNKNOWN")
         }
